@@ -4,38 +4,7 @@ const serverlessConfiguration: AWS = {
   service: 'vanityserverless-api',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild', 'serverless-webpack'],
-  provider: {
-    name: 'aws',
-    runtime: 'nodejs14.x',
-    profile: 'serverlessUser',
-    apiGateway: {
-      minimumCompressionSize: 1024,
-      shouldStartNameWithService: true,
-    },
-    environment: {
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-      NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
-      tableName: "${self:custom.tablename}",
-    },
 
-    iamRoleStatements: [ 
-      {
-        Effect: 'Allow',
-        Action: [
-          'dynamodb:DescribeTable',
-          'dynamodb:Query',
-          'dynamodb:Scan',
-          'dynamodb:GetItem',
-          'dynamodb:PutItem',
-          'dynamodb:UpdateItem',
-          'dynamodb:DeleteItem'
-        ],
-      Resource:
-        [ 'arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/${self:custom.tablename' ]
-      }
-    ],
-  },
-  package: { individually: true },
   custom: {
     tablename: 'vanityNumbers',
     webpack: {
@@ -53,6 +22,48 @@ const serverlessConfiguration: AWS = {
       concurrency: 10,
     },
   },
+  
+  provider: {
+    name: 'aws',
+    stage: 'dev',
+    region: 'us-east-1',
+    runtime: 'nodejs14.x',
+    profile: 'serverlessUser',
+
+    apiGateway: {
+      minimumCompressionSize: 1024,
+      shouldStartNameWithService: true,
+    },
+
+    environment: {
+      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      tableName: "${self:custom.tablename}",
+    },
+
+    iam: {
+      role: {
+        statements: [ 
+          {
+            Effect: 'Allow',
+            Action: [ 
+              'dynamodb:DescribeTable',
+              'dynamodb:Query',
+              'dynamodb:Scan',
+              'dynamodb:GetItem',
+              'dynamodb:PutItem',
+              'dynamodb:UpdateItem',
+              'dynamodb:DeleteItem'
+            ],
+            Resource: 'arn:aws:dynamodb::account-id:table/${self:custom.tablename}'
+          }
+        ]
+      }
+    }
+  },
+
+  package: { individually: true },
+
   // import the function via paths
   functions: { 
     vanityNumber: {
