@@ -6,7 +6,7 @@ const serverlessConfiguration: AWS = {
   plugins: ['serverless-esbuild', 'serverless-webpack'],
 
   custom: {
-    tablename: 'vanityNumbers',
+    tableName: 'vanityNumbers',
     webpack: {
       webpackConfig: './webpack.config.js',
       includeModules: true,
@@ -38,7 +38,7 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
-      tableName: "${self:custom.tablename}",
+      tableName: "${self:custom.tableName}",
     },
 
     iam: {
@@ -55,7 +55,7 @@ const serverlessConfiguration: AWS = {
               'dynamodb:UpdateItem',
               'dynamodb:DeleteItem'
             ],
-            Resource: 'arn:aws:dynamodb::account-id:table/${self:custom.tablename}'
+            Resource: '*'
           }
         ]
       }
@@ -85,7 +85,7 @@ const serverlessConfiguration: AWS = {
       VanityTable: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
-          TableName: "${self:custom.tablename}",
+          TableName: "${self:custom.tableName}",
           AttributeDefinitions: [
             { 
               AttributeName: "phoneNumber", AttributeType: "S"
