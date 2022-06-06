@@ -87,36 +87,21 @@ const serverlessConfiguration: AWS = {
         Properties: {
           TableName: "${self:custom.tableName}",
           AttributeDefinitions: [
-            { 
-              AttributeName: "phoneNumber", AttributeType: "S"
-            },
-            { 
-              AttributeName: "vanity1", AttributeType: "S"
-            },
-            { 
-              AttributeName: "vanity2", AttributeType: "S"
-            },
-            { 
-              AttributeName: "vanity3", AttributeType: "S"
-            },
-            { 
-              AttributeName: "vanity4", AttributeType: "S"
-            },
-            { 
-              AttributeName: "vanity5", AttributeType: "S"
-            },
             {  
               AttributeName: "Id", AttributeType: "S"
+            },
+            { 
+              AttributeName: "phoneNumber", AttributeType: "S"
             }
           ],
         KeySchema: [
           {
-            AttributeName: "phoneNumber",
-            KeyType: "HASH" 
+            AttributeName: "Id",
+            KeyType: "HASH",
           },
           {
-            AttributeName: "Id",
-            KeyType: "RANGE",
+            AttributeName: "phoneNumber",
+            KeyType: "RANGE" 
           }
         ],
         ProvisionedThroughput: {

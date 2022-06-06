@@ -12,6 +12,7 @@
   "dependencies": {
     "@middy/core": "^2.5.3",
     "@middy/http-json-body-parser": "^2.5.3",
+    "an-array-of-english-words": "^2.0.0",
     "aws-sdk": "^2.1145.0",
     "serverless-webpack": "^5.7.1",
     "uuid": "^8.3.2",
