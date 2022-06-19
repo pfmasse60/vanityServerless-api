@@ -1,0 +1,354 @@
+{
+  "modules": [
+    {
+      "id": "5a86062e-a1df-418e-9203-72140d0aea18",
+      "type": "PlayPrompt",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "c441361b-c0b1-4a76-af7a-41da489ecceb"
+        },
+        {
+          "condition": "Error",
+          "transition": "c441361b-c0b1-4a76-af7a-41da489ecceb"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "Thank you for using my AWS contact flow. Goodbye.",
+          "namespace": null
+        },
+        {
+          "name": "TextToSpeechType",
+          "value": "ssml"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 1497,
+          "y": 264
+        },
+        "useDynamic": false
+      }
+    },
+    {
+      "id": "bfa54790-8c80-4ea8-8d45-0a016ad3d3a5",
+      "type": "PlayPrompt",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "5a86062e-a1df-418e-9203-72140d0aea18"
+        },
+        {
+          "condition": "Error",
+          "transition": "c441361b-c0b1-4a76-af7a-41da489ecceb"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "Your phone number could be either <say-as interpret-as=\"characters\">$.Attributes.vanity1</say-as>, or <say-as interpret-as=\"characters\">$.Attributes.vanity2</say-as>, or <say-as interpret-as=\"characters\">$.Attributes.vanity3</say-as>",
+          "namespace": null
+        },
+        {
+          "name": "TextToSpeechType",
+          "value": "ssml"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 1323,
+          "y": 24
+        },
+        "useDynamic": false
+      }
+    },
+    {
+      "id": "7024e1d0-31c3-4ba2-aa90-f859841c152e",
+      "type": "SetAttributes",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "bfa54790-8c80-4ea8-8d45-0a016ad3d3a5"
+        },
+        {
+          "condition": "Error",
+          "transition": "c441361b-c0b1-4a76-af7a-41da489ecceb"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Attribute",
+          "value": "number0",
+          "key": "vanity1",
+          "namespace": "External"
+        },
+        {
+          "name": "Attribute",
+          "value": "number1",
+          "key": "vanity2",
+          "namespace": "External"
+        },
+        {
+          "name": "Attribute",
+          "value": "number2",
+          "key": "vanity3",
+          "namespace": "External"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 1059,
+          "y": 24
+        },
+        "dynamicParams": [
+          "vanity1",
+          "vanity2",
+          "vanity3"
+        ]
+      }
+    },
+    {
+      "id": "b1f846cd-efff-4c80-9376-6f83c0421a10",
+      "type": "PlayPrompt",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "c441361b-c0b1-4a76-af7a-41da489ecceb"
+        },
+        {
+          "condition": "Error",
+          "transition": "c441361b-c0b1-4a76-af7a-41da489ecceb"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "There was an error when invoking the lambda function.",
+          "namespace": null
+        },
+        {
+          "name": "TextToSpeechType",
+          "value": "text"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 615,
+          "y": 313
+        },
+        "useDynamic": false
+      }
+    },
+    {
+      "id": "83505a43-bcdd-4c6c-b93a-1cb6c8964307",
+      "type": "InvokeExternalResource",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "7024e1d0-31c3-4ba2-aa90-f859841c152e"
+        },
+        {
+          "condition": "Error",
+          "transition": "b1f846cd-efff-4c80-9376-6f83c0421a10"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "FunctionArn",
+          "value": "arn:aws:lambda:us-east-1:834782899349:function:vanityserverless-api-dev-vanityNumber",
+          "namespace": null
+        },
+        {
+          "name": "TimeLimit",
+          "value": "3"
+        },
+        {
+          "name": "Parameter",
+          "key": "phoneNumber",
+          "value": "Stored customer input",
+          "namespace": "System"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 820,
+          "y": 15
+        },
+        "dynamicMetadata": {
+          "phoneNumber": true
+        },
+        "useDynamic": false
+      },
+      "target": "Lambda"
+    },
+    {
+      "id": "394c5130-0887-4834-8b0e-08745eb7e7bd",
+      "type": "SetCallBackNumber",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "83505a43-bcdd-4c6c-b93a-1cb6c8964307"
+        },
+        {
+          "condition": "InvalidPhoneNumber",
+          "transition": "c441361b-c0b1-4a76-af7a-41da489ecceb"
+        },
+        {
+          "condition": "NonDialableNumber",
+          "transition": "c441361b-c0b1-4a76-af7a-41da489ecceb"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "CallBackNumber",
+          "value": "Stored customer input",
+          "namespace": "System"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 604,
+          "y": 15
+        }
+      }
+    },
+    {
+      "id": "c441361b-c0b1-4a76-af7a-41da489ecceb",
+      "type": "Disconnect",
+      "branches": [],
+      "parameters": [],
+      "metadata": {
+        "position": {
+          "x": 1420,
+          "y": 509
+        }
+      }
+    },
+    {
+      "id": "00c35593-4095-482b-a9bc-bd4062c0441b",
+      "type": "PlayPrompt",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "c441361b-c0b1-4a76-af7a-41da489ecceb"
+        },
+        {
+          "condition": "Error",
+          "transition": "c441361b-c0b1-4a76-af7a-41da489ecceb"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "There was an error with storing customer input.",
+          "namespace": null
+        },
+        {
+          "name": "TextToSpeechType",
+          "value": "text"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 153,
+          "y": 373
+        },
+        "useDynamic": false
+      }
+    },
+    {
+      "id": "e542bcb1-5914-403f-a51f-33293777f0c0",
+      "type": "SetLoggingBehavior",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "76414e75-9121-485a-ac78-e37f3fab0809"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "LoggingBehavior",
+          "value": "Enable"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 148,
+          "y": 34
+        }
+      }
+    },
+    {
+      "id": "76414e75-9121-485a-ac78-e37f3fab0809",
+      "type": "StoreUserInput",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "394c5130-0887-4834-8b0e-08745eb7e7bd"
+        },
+        {
+          "condition": "InvalidNumber",
+          "transition": "c441361b-c0b1-4a76-af7a-41da489ecceb"
+        },
+        {
+          "condition": "Error",
+          "transition": "00c35593-4095-482b-a9bc-bd4062c0441b"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "Please enter telephone number you wish to create vanity phone numbers for.",
+          "namespace": null
+        },
+        {
+          "name": "TextToSpeechType",
+          "value": "ssml"
+        },
+        {
+          "name": "CustomerInputType",
+          "value": "PhoneNumber"
+        },
+        {
+          "name": "Timeout",
+          "value": "5"
+        },
+        {
+          "name": "PhoneNumberFormat",
+          "value": "Local"
+        },
+        {
+          "name": "CountryCode",
+          "value": "US"
+        }
+      ],
+      "metadata": {
+        "position": {
+          "x": 378,
+          "y": 20
+        },
+        "useDynamic": false,
+        "useDynamicForEncryptionKeys": true,
+        "useDynamicForTerminatorDigits": false,
+        "countryCodePrefix": "+1"
+      }
+    }
+  ],
+  "version": "1",
+  "start": "e542bcb1-5914-403f-a51f-33293777f0c0",
+  "metadata": {
+    "entryPointPosition": {
+      "x": 15,
+      "y": 42
+    },
+    "snapToGrid": false,
+    "name": "Vanity Phone Number Flow",
+    "description": null,
+    "type": "contactFlow",
+    "status": "published",
+    "hash": "facea8068d4c97cd8927847e2e2d3df2d35c00162ccab0d7950d24d1e3c55b4d"
+  },
+  "type": "contactFlow"
+}

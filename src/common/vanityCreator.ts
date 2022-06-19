@@ -12,6 +12,8 @@ export default async (number: string): Promise<string[]> => {
 
   let vanityList = [];
 
+  number = number.replace('+','');
+  number = number.substring(1, number.length);
   const firstSix = number.slice(0, 6);
   const lastFour = number.slice(6).split('');
 

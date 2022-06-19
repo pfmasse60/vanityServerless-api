@@ -38,7 +38,7 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
-      tableName: "${self:custom.tableName}",
+      tableName: '${self:custom.tableName}',
     },
 
     iam: {
@@ -85,23 +85,23 @@ const serverlessConfiguration: AWS = {
       VanityTable: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
-          TableName: "${self:custom.tableName}",
+          TableName: '${self:custom.tableName}',
           AttributeDefinitions: [
             {  
-              AttributeName: "Id", AttributeType: "S"
+              AttributeName: 'Id', AttributeType: 'S'
             },
             { 
-              AttributeName: "phoneNumber", AttributeType: "S"
+              AttributeName: 'phoneNumber', AttributeType: 'S'
             }
           ],
         KeySchema: [
           {
-            AttributeName: "Id",
-            KeyType: "HASH",
+            AttributeName: 'Id',
+            KeyType: 'HASH',
           },
           {
-            AttributeName: "phoneNumber",
-            KeyType: "RANGE" 
+            AttributeName: 'phoneNumber',
+            KeyType: 'RANGE' 
           }
         ],
         ProvisionedThroughput: {

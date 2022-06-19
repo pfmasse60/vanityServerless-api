@@ -19,7 +19,6 @@ export const handler = async (event: { pathParameters: { phoneNumber: string; };
     const finalVanityList = vanityNumbers.slice(-3); // taking the last three (or fewer) elements of the array to return to Connect
 
     for (let i = 0; i < finalVanityList.length; i++) {
-        // result['number' + i] = finalVanityList[i].replace(/(.)/g, '$&, ');
         result['number' + i] = finalVanityList[i];
     }
 
